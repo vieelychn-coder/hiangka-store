@@ -22,38 +22,46 @@ export default async function Home() {
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <Navbar />
 
-      <div className="container" style={{ paddingTop: '24px' }}>
-        {/* Hero Banner */}
-        <div className="banner" style={{
+      <div className="container" style={{ paddingTop: '32px' }}>
+        {/* HERO SECTION */}
+        <div style={{
           background: 'linear-gradient(135deg, #1a1a2e 0%, #2d1b69 50%, #c9a227 100%)',
           padding: '60px 40px',
           borderRadius: '20px',
-          marginBottom: '30px',
+          marginBottom: '32px',
           color: '#fff',
           textAlign: 'center',
           boxShadow: '0 8px 30px rgba(0,0,0,0.2)',
         }}>
-          <h2 style={{ fontSize: '42px', fontWeight: '800', marginBottom: '8px' }}>
-            Flash Sale 50%
-          </h2>
-          <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '20px' }}>
-            Dapatkan produk favoritmu dengan harga spesial!
+          <p style={{ fontSize: '14px', textTransform: 'uppercase', letterSpacing: '4px', opacity: 0.8 }}>
+            Limited Drop
           </p>
-          <Link href="/products" className="btn-primary">Belanja Sekarang</Link>
+          <h2 style={{ fontSize: '44px', fontWeight: '800', margin: '8px 0 12px' }}>
+            Premium Streetwear Collection
+          </h2>
+          <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '24px' }}>
+            Koleksi eksklusif dengan jumlah terbatas. Dapatkan sebelum habis.
+          </p>
+          <Link href="/products" className="btn-primary" style={{ padding: '14px 40px', fontSize: '16px' }}>
+            Belanja Sekarang
+          </Link>
         </div>
 
-        {/* Kategori */}
-        <div className="category-grid">
-          {['Fashion', 'Accessories', 'Footwear', 'Art & Print', 'Lifestyle'].map((cat) => (
-            <Link key={cat} href={`/products?category=${cat}`} className="category-item">
-              {cat}
-            </Link>
-          ))}
+        {/* KATEGORI (CHIP) */}
+        <div style={styles.chipContainer}>
+          <Link href="/products?category=all" style={styles.chip}>Semua</Link>
+          <Link href="/products?category=Fashion" style={styles.chip}>Fashion</Link>
+          <Link href="/products?category=Accessories" style={styles.chip}>Accessories</Link>
+          <Link href="/products?category=Footwear" style={styles.chip}>Shoes</Link>
+          <Link href="/products?category=Art & Print" style={styles.chip}>Art</Link>
+          <Link href="/products?category=Lifestyle" style={styles.chip}>Lifestyle</Link>
         </div>
 
-        {/* Produk Unggulan */}
+        {/* PRODUK UNGGULAN */}
         <div className="section-title">
-          <span style={{ color: 'var(--text)' }}>🔥 Produk Unggulan</span>
+          <span style={{ color: 'var(--text)', fontSize: '24px', fontWeight: '700' }}>
+            Best Seller
+          </span>
           <Link href="/products" style={{ color: '#c9a227', fontWeight: '600' }}>Lihat Semua →</Link>
         </div>
 
@@ -68,8 +76,8 @@ export default async function Home() {
               <div className="info">
                 <div className="name">{product.name}</div>
                 <div className="price">Rp {product.price.toLocaleString('id-ID')}</div>
-                <div className="rating">⭐ {product.rating}</div>
-                <div className="sold">{product.sold} terjual</div>
+                <div className="rating">★ {product.rating}</div>
+                <div className="sold">{product.sold} sold</div>
               </div>
             </Link>
           ))}
@@ -89,3 +97,24 @@ export default async function Home() {
     </div>
   );
 }
+
+const styles = {
+  chipContainer: {
+    display: 'flex',
+    gap: '10px',
+    flexWrap: 'wrap',
+    marginBottom: '32px',
+  },
+  chip: {
+    padding: '8px 18px',
+    background: 'var(--card)',
+    borderRadius: '30px',
+    fontSize: '13px',
+    fontWeight: '500',
+    color: 'var(--text)',
+    border: '1px solid var(--border)',
+    transition: 'all 0.3s',
+    cursor: 'pointer',
+    textDecoration: 'none',
+  },
+};

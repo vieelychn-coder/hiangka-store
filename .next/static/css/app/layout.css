@@ -326,4 +326,17 @@ body {
   font-size: 20px;
   color: #e5484d;
 }
+/* Navbar height adjustment */
+.navbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+/* Chip hover */
+.chip:hover {
+  background: #c9a227;
+  color: #fff;
+  border-color: #c9a227;
+}
 
