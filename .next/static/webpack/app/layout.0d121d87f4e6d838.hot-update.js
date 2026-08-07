@@ -6,7 +6,7 @@
  * or disable the default devtool with "devtool: false".
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
-(self["webpackChunk_N_E"] = self["webpackChunk_N_E"] || []).push([["app/layout"],{
+self["webpackHotUpdate_N_E"]("app/layout",{
 
 /***/ "(app-pages-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%2Fdata%2Fdata%2Fcom.termux%2Ffiles%2Fhome%2FHiangka%20store%20project%2Ffrontend%2Fsrc%2Fcontext%2FThemeContext.jsx&modules=%2Fdata%2Fdata%2Fcom.termux%2Ffiles%2Fhome%2FHiangka%20store%20project%2Ffrontend%2Fsrc%2Fstyles%2Fglobals.css&server=false!":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
@@ -15,17 +15,6 @@
 /***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
 eval(__webpack_require__.ts("Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./src/context/ThemeContext.jsx */ \"(app-pages-browser)/./src/context/ThemeContext.jsx\"));\nPromise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./src/styles/globals.css */ \"(app-pages-browser)/./src/styles/globals.css\"))//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwcC1wYWdlcy1icm93c2VyKS8uL25vZGVfbW9kdWxlcy9uZXh0L2Rpc3QvYnVpbGQvd2VicGFjay9sb2FkZXJzL25leHQtZmxpZ2h0LWNsaWVudC1lbnRyeS1sb2FkZXIuanM/bW9kdWxlcz0lMkZkYXRhJTJGZGF0YSUyRmNvbS50ZXJtdXglMkZmaWxlcyUyRmhvbWUlMkZIaWFuZ2thJTIwc3RvcmUlMjBwcm9qZWN0JTJGZnJvbnRlbmQlMkZzcmMlMkZjb250ZXh0JTJGVGhlbWVDb250ZXh0LmpzeCZtb2R1bGVzPSUyRmRhdGElMkZkYXRhJTJGY29tLnRlcm11eCUyRmZpbGVzJTJGaG9tZSUyRkhpYW5na2ElMjBzdG9yZSUyMHByb2plY3QlMkZmcm9udGVuZCUyRnNyYyUyRnN0eWxlcyUyRmdsb2JhbHMuY3NzJnNlcnZlcj1mYWxzZSEiLCJtYXBwaW5ncyI6IkFBQUEsc0xBQWlJO0FBQ2pJIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vX05fRS8/ZjgzNiJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQoLyogd2VicGFja01vZGU6IFwiZWFnZXJcIiAqLyBcIi9kYXRhL2RhdGEvY29tLnRlcm11eC9maWxlcy9ob21lL0hpYW5na2Egc3RvcmUgcHJvamVjdC9mcm9udGVuZC9zcmMvY29udGV4dC9UaGVtZUNvbnRleHQuanN4XCIpO1xuaW1wb3J0KC8qIHdlYnBhY2tNb2RlOiBcImVhZ2VyXCIgKi8gXCIvZGF0YS9kYXRhL2NvbS50ZXJtdXgvZmlsZXMvaG9tZS9IaWFuZ2thIHN0b3JlIHByb2plY3QvZnJvbnRlbmQvc3JjL3N0eWxlcy9nbG9iYWxzLmNzc1wiKSJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(app-pages-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%2Fdata%2Fdata%2Fcom.termux%2Ffiles%2Fhome%2FHiangka%20store%20project%2Ffrontend%2Fsrc%2Fcontext%2FThemeContext.jsx&modules=%2Fdata%2Fdata%2Fcom.termux%2Ffiles%2Fhome%2FHiangka%20store%20project%2Ffrontend%2Fsrc%2Fstyles%2Fglobals.css&server=false!\n"));
-
-/***/ }),
-
-/***/ "(app-pages-browser)/./src/styles/globals.css":
-/*!********************************!*\
-  !*** ./src/styles/globals.css ***!
-  \********************************/
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval(__webpack_require__.ts("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = (\"dd47ab6c9abd\");\nif (true) { module.hot.accept() }\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwcC1wYWdlcy1icm93c2VyKS8uL3NyYy9zdHlsZXMvZ2xvYmFscy5jc3MiLCJtYXBwaW5ncyI6IjtBQUFBLCtEQUFlLGNBQWM7QUFDN0IsSUFBSSxJQUFVLElBQUksaUJBQWlCIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vX05fRS8uL3NyYy9zdHlsZXMvZ2xvYmFscy5jc3M/Mjg5YiJdLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBcImRkNDdhYjZjOWFiZFwiXG5pZiAobW9kdWxlLmhvdCkgeyBtb2R1bGUuaG90LmFjY2VwdCgpIH1cbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(app-pages-browser)/./src/styles/globals.css\n"));
 
 /***/ }),
 
@@ -62,11 +51,4 @@ eval(__webpack_require__.ts("\n\nif (false) {} else {\n  module.exports = __webp
 
 /***/ })
 
-},
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
-/******/ __webpack_require__.O(0, ["main-app"], function() { return __webpack_exec__("(app-pages-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%2Fdata%2Fdata%2Fcom.termux%2Ffiles%2Fhome%2FHiangka%20store%20project%2Ffrontend%2Fsrc%2Fcontext%2FThemeContext.jsx&modules=%2Fdata%2Fdata%2Fcom.termux%2Ffiles%2Fhome%2FHiangka%20store%20project%2Ffrontend%2Fsrc%2Fstyles%2Fglobals.css&server=false!"); });
-/******/ var __webpack_exports__ = __webpack_require__.O();
-/******/ _N_E = __webpack_exports__;
-/******/ }
-]);
+});
