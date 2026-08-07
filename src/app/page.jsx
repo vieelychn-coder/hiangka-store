@@ -1,65 +1,71 @@
+import Navbar from '../components/Navbar';
 import Link from 'next/link';
+import { supabase } from '../lib/supabase';
 
-export default function Home() {
+async function getProducts() {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .limit(8);
+  if (error) return [];
+  return data;
+}
+
+export default async function Home() {
+  const products = await getProducts();
+
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>HIANKA Store</h1>
-        <p style={styles.subtitle}>Premium Limited Drop Marketplace</p>
-        <div style={styles.buttons}>
-          <Link href="/products" style={styles.button}>Lihat Produk</Link>
-          <Link href="/login" style={styles.button}>Login</Link>
-          <Link href="/register" style={styles.button}>Daftar</Link>
+    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      <Navbar />
+
+      <div className="container" style={{ paddingTop: '24px' }}>
+        {/* Banner */}
+        <div className="banner">
+          <h2>Flash Sale 50%</h2>
+          <p>Dapatkan produk favoritmu dengan harga spesial!</p>
+          <Link href="/products" className="btn-primary">Belanja Sekarang</Link>
+        </div>
+
+        {/* Kategori */}
+        <div className="category-grid">
+          {['Fashion', 'Accessories', 'Footwear', 'Art & Print', 'Lifestyle'].map((cat) => (
+            <Link key={cat} href={`/products?category=${cat}`} className="category-item">
+              {cat}
+            </Link>
+          ))}
+        </div>
+
+        {/* Produk Unggulan */}
+        <div className="section-title">
+          <span>Produk Unggulan</span>
+          <Link href="/products">Lihat Semua</Link>
+        </div>
+
+        <div className="product-grid">
+          {products.map((product) => (
+            <Link href={`/detail/${product.id}`} key={product.id} className="product-card">
+              <div className="image">Logo</div>
+              <div className="info">
+                <div className="name">{product.name}</div>
+                <div className="price">Rp {product.price.toLocaleString()}</div>
+                <div className="rating">⭐ {product.rating}</div>
+                <div className="sold">{product.sold} terjual</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="footer">
+        <div className="container">
+          <div className="brand">HIANKA</div>
+          <p>Premium Limited Drop Marketplace</p>
+          <p style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+            Designed & Developed by Viee Lychn
+          </p>
         </div>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: '#0a0a0a',
-    padding: '20px',
-  },
-  card: {
-    background: '#1a1a2e',
-    padding: '40px',
-    borderRadius: '16px',
-    maxWidth: '400px',
-    width: '100%',
-    textAlign: 'center',
-    border: '1px solid #2a2a2a',
-  },
-  title: {
-    color: '#c9a227',
-    fontSize: '36px',
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    color: '#888',
-    fontSize: '16px',
-    marginTop: '8px',
-    marginBottom: '24px',
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-  },
-  button: {
-    padding: '12px',
-    background: 'linear-gradient(135deg, #c9a227, #e5484d)',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    textDecoration: 'none',
-    textAlign: 'center',
-  },
-};
