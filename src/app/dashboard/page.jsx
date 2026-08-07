@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { supabase } from '../../lib/supabase';
 import Navbar from '../../components/Navbar';
+import Toast from '../../components/Toast';
 import useWindowSize from '../../hooks/useWindowSize';
 
 export default function DashboardPage() {
@@ -18,6 +19,37 @@ export default function DashboardPage() {
   const [orders, setOrders] = useState([]);
   const [wishlist, setWishlist] = useState([]);
   const [stats, setStats] = useState({ orders: 0, wishlist: 0 });
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+  };
+
+  const hideToast = () => setToast(null);
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
+  const shortenId = (id) => {
+    if (!id) return '';
+    return id.slice(0, 8) + '...' + id.slice(-4);
+  };
+
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('User ID berhasil disalin!', 'success');
+    } catch (error) {
+      showToast('Gagal menyalin User ID', 'error');
+    }
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -86,7 +118,6 @@ export default function DashboardPage() {
     );
   }
 
-  // ===== STYLES RESPONSIVE =====
   const styles = {
     page: {
       minHeight: '100vh',
@@ -96,7 +127,7 @@ export default function DashboardPage() {
       maxWidth: '1200px',
       margin: '0 auto',
       padding: isMobile ? '16px' : '24px 16px',
-      display: isMobile ? 'flex' : 'flex',
+      display: 'flex',
       flexDirection: isMobile ? 'column' : 'row',
       gap: isMobile ? '16px' : '24px',
       alignItems: 'flex-start',
@@ -193,9 +224,53 @@ export default function DashboardPage() {
       borderRadius: '12px',
       border: '1px solid var(--border)',
     },
-    userId: {
-      wordBreak: 'break-all',
-      overflowWrap: 'anywhere',
+    infoGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+      gap: '16px',
+      marginTop: '16px',
+    },
+    infoCard: {
+      background: 'var(--bg)',
+      padding: '16px',
+      borderRadius: '12px',
+      border: '1px solid var(--border)',
+      transition: 'all 0.3s ease',
+      cursor: 'default',
+    },
+    infoLabel: {
+      fontSize: '12px',
+      color: '#888',
+      textTransform: 'uppercase',
+      letterSpacing: '0.5px',
+      marginBottom: '4px',
+    },
+    infoValue: {
+      fontSize: '16px',
+      fontWeight: '600',
+      color: 'var(--text)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+    },
+    infoValueEmail: {
+      fontSize: '16px',
+      fontWeight: '600',
+      color: 'var(--text)',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+    copyBtn: {
+      background: 'none',
+      border: 'none',
+      color: '#c9a227',
+      cursor: 'pointer',
+      fontSize: '14px',
+      padding: '0 4px',
+      fontWeight: '500',
+      transition: 'all 0.3s',
+      flexShrink: 0,
     },
     statsGrid: {
       display: 'grid',
@@ -300,7 +375,6 @@ export default function DashboardPage() {
     <div style={styles.page}>
       <Navbar />
       <div style={styles.container}>
-        {/* Sidebar */}
         <aside style={styles.sidebar}>
           <div style={styles.profileCard}>
             <div style={styles.avatar}>
@@ -317,7 +391,7 @@ export default function DashboardPage() {
                 ...(activeTab === 'profile' ? styles.navItemActive : {})
               }}
             >
-              Profile
+              Profil Saya
             </button>
             <button 
               onClick={() => setActiveTab('orders')} 
@@ -326,7 +400,7 @@ export default function DashboardPage() {
                 ...(activeTab === 'orders' ? styles.navItemActive : {})
               }}
             >
-              Orders ({stats.orders})
+              Riwayat Pesanan ({stats.orders})
             </button>
             <button 
               onClick={() => setActiveTab('wishlist')} 
@@ -338,24 +412,85 @@ export default function DashboardPage() {
               Wishlist ({stats.wishlist})
             </button>
             <button onClick={handleLogout} style={styles.logoutBtn}>
-              Logout
+              Keluar
             </button>
           </nav>
         </aside>
 
-        {/* Main Content */}
         <main style={styles.main}>
           {activeTab === 'profile' && (
             <section>
-              <h2 style={styles.title}>My Profile</h2>
+              <h2 style={styles.title}>Profil Saya</h2>
               <div style={styles.card}>
-                <p style={{ color: 'var(--text)' }}><strong>Email:</strong> {user?.email}</p>
-                <p style={styles.userId}><strong>User ID:</strong> {user?.id}</p>
-                <p style={{ color: 'var(--text)' }}><strong>Joined:</strong> {new Date(user?.created_at).toLocaleDateString('en-US')}</p>
+                <div style={styles.infoGrid}>
+                  <div 
+                    style={styles.infoCard}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)';
+                      e.currentTarget.style.borderColor = '#c9a227';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.borderColor = 'var(--border)';
+                    }}
+                  >
+                    <div style={styles.infoLabel}>Email</div>
+                    <div style={styles.infoValueEmail}>
+                      {user?.email}
+                    </div>
+                  </div>
+
+                  <div 
+                    style={styles.infoCard}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)';
+                      e.currentTarget.style.borderColor = '#c9a227';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.borderColor = 'var(--border)';
+                    }}
+                  >
+                    <div style={styles.infoLabel}>User ID</div>
+                    <div style={styles.infoValue}>
+                      <span>{shortenId(user?.id)}</span>
+                      <button 
+                        onClick={() => copyToClipboard(user?.id)}
+                        style={styles.copyBtn}
+                      >
+                        Salin
+                      </button>
+                    </div>
+                  </div>
+
+                  <div 
+                    style={styles.infoCard}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)';
+                      e.currentTarget.style.borderColor = '#c9a227';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.borderColor = 'var(--border)';
+                    }}
+                  >
+                    <div style={styles.infoLabel}>Bergabung Sejak</div>
+                    <div style={styles.infoValue}>
+                      {formatDate(user?.created_at)}
+                    </div>
+                  </div>
+                </div>
+
                 <div style={styles.statsGrid}>
                   <div style={styles.statCard}>
                     <div style={styles.statNumber}>{stats.orders}</div>
-                    <div style={styles.statLabel}>Orders</div>
+                    <div style={styles.statLabel}>Pesanan</div>
                   </div>
                   <div style={styles.statCard}>
                     <div style={styles.statNumber}>{stats.wishlist}</div>
@@ -368,9 +503,9 @@ export default function DashboardPage() {
 
           {activeTab === 'orders' && (
             <section>
-              <h2 style={styles.title}>Order History</h2>
+              <h2 style={styles.title}>Riwayat Pesanan</h2>
               {orders.length === 0 ? (
-                <div style={styles.empty}>No orders yet. Start shopping!</div>
+                <div style={styles.empty}>Belum ada pesanan. Yuk, belanja!</div>
               ) : (
                 orders.map((order) => (
                   <div key={order.id} style={styles.orderCard}>
@@ -380,12 +515,12 @@ export default function DashboardPage() {
                         ...styles.orderStatus,
                         ...(order.status === 'delivered' ? styles.delivered : styles.pending)
                       }}>
-                        {order.status}
+                        {order.status === 'delivered' ? 'Selesai' : 'Diproses'}
                       </span>
                     </div>
                     <div style={styles.orderBody}>
                       <p>Total: Rp {order.total.toLocaleString('id-ID')}</p>
-                      <p style={styles.orderDate}>{new Date(order.created_at).toLocaleDateString('en-US')}</p>
+                      <p style={styles.orderDate}>{new Date(order.created_at).toLocaleDateString('id-ID')}</p>
                     </div>
                   </div>
                 ))
@@ -395,9 +530,9 @@ export default function DashboardPage() {
 
           {activeTab === 'wishlist' && (
             <section>
-              <h2 style={styles.title}>My Wishlist</h2>
+              <h2 style={styles.title}>Wishlist</h2>
               {wishlist.length === 0 ? (
-                <div style={styles.empty}>Wishlist is empty.</div>
+                <div style={styles.empty}>Wishlist masih kosong.</div>
               ) : (
                 <div style={styles.wishlistGrid}>
                   {wishlist.map((item) => {
@@ -429,6 +564,14 @@ export default function DashboardPage() {
           )}
         </main>
       </div>
+
+      {toast && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={hideToast} 
+        />
+      )}
     </div>
   );
 }
