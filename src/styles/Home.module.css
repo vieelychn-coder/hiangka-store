@@ -1,0 +1,138 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d1b69 50%, #c9a227 100%);
+  padding: 32px 24px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  color: #fff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.heroTag {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.heroTitle {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.heroDesc {
+  font-size: 15px;
+  opacity: 0.85;
+  margin: 0;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.heroBtnPrimary {
+  padding: 8px 28px;
+  background: linear-gradient(135deg, #c9a227, #e5484d);
+  color: #fff;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.heroBtnPrimary:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
+}
+
+.heroBtnSecondary {
+  padding: 8px 28px;
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.heroBtnSecondary:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: #fff;
+}
+
+.heroStats {
+  display: flex;
+  gap: 24px;
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.heroStats span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sectionTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.sectionTitle h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sectionTitle a {
+  color: #c9a227;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.footerCredit {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 20px 16px;
+    border-radius: 12px;
+    gap: 6px;
+  }
+  .heroTitle { font-size: 20px; }
+  .heroDesc { font-size: 13px; }
+  .heroBtnPrimary, .heroBtnSecondary { padding: 6px 20px; font-size: 13px; }
+  .heroStats { gap: 16px; font-size: 12px; }
+  .sectionTitle h2 { font-size: 18px; }
+  .productGrid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+}
