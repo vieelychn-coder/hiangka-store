@@ -409,3 +409,35 @@ body {
     display: none !important;
   }
 }
+/* ===== KATEGORI SCROLL ===== */
+.category-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0 14px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-chip {
+  padding: 6px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.category-chip:hover {
+  background: #c9a227;
+  color: #fff;
+  border-color: #c9a227;
+}
