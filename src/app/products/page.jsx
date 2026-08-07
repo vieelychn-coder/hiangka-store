@@ -1,128 +1,85 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+import Navbar from '../../components/Navbar';
 import Link from 'next/link';
-import { productAPI } from '../../lib/api';
+import { supabase } from '../../lib/supabase';
 
-export default function ProductsPage() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await productAPI.getAll();
-        setProducts(response.data.data || []);
-      } catch (err) {
-        setError('Gagal mengambil produk');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
-
-  if (loading) {
-    return (
-      <div style={styles.container}>
-        <p style={styles.text}>Loading...</p>
-      </div>
-    );
+async function getProducts(category) {
+  let query = supabase.from('products').select('*');
+  if (category && category !== 'all') {
+    query = query.eq('category', category);
   }
+  const { data, error } = await query;
+  if (error) return [];
+  return data;
+}
 
-  if (error) {
-    return (
-      <div style={styles.container}>
-        <p style={styles.error}>{error}</p>
-      </div>
-    );
-  }
+function getProductImage(id) {
+  return `https://picsum.photos/seed/${id}/300/300`;
+}
+
+export default async function ProductsPage({ searchParams }) {
+  const category = searchParams?.category || 'all';
+  const products = await getProducts(category);
+
+  const categories = ['all', 'Fashion', 'Accessories', 'Footwear', 'Art & Print', 'Lifestyle'];
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>🛍️ Semua Produk</h1>
-      <div style={styles.grid}>
-        {products.map((product) => (
-          <Link href={`/detail/${product.id}`} key={product.id} style={styles.card}>
-            <div style={styles.imagePlaceholder}>📸</div>
-            <h3 style={styles.productName}>{product.name}</h3>
-            <p style={styles.price}>Rp {product.price.toLocaleString()}</p>
-            <p style={styles.category}>{product.category}</p>
-            <p style={styles.stock}>Stok: {product.stock}</p>
-          </Link>
-        ))}
+    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      <Navbar />
+      <div className="container" style={{ paddingTop: '24px' }}>
+        {/* Kategori Filter */}
+        <div className="category-grid">
+          {categories.map((cat) => (
+            <Link 
+              key={cat} 
+              href={`/products?category=${cat}`}
+              className={`category-item ${category === cat ? 'active' : ''}`}
+            >
+              {cat === 'all' ? 'Semua' : cat}
+            </Link>
+          ))}
+        </div>
+
+        {/* Produk */}
+        <div className="section-title">
+          <span>{category === 'all' ? 'Semua Produk' : category}</span>
+          <span style={{ fontSize: '14px', color: '#888' }}>{products.length} produk</span>
+        </div>
+
+        <div className="product-grid">
+          {products.length === 0 ? (
+            <p style={{ textAlign: 'center', color: '#888', gridColumn: '1 / -1', padding: '40px' }}>
+              Belum ada produk di kategori ini.
+            </p>
+          ) : (
+            products.map((product) => (
+              <Link href={`/detail/${product.id}`} key={product.id} className="product-card">
+                <img 
+                  src={getProductImage(product.id)} 
+                  alt={product.name}
+                  className="product-image"
+                />
+                <div className="info">
+                  <div className="name">{product.name}</div>
+                  <div className="price">Rp {product.price.toLocaleString('id-ID')}</div>
+                  <div className="rating">⭐ {product.rating}</div>
+                  <div className="sold">{product.sold} terjual</div>
+                </div>
+              </Link>
+            ))
+          )}
+        </div>
       </div>
-      {products.length === 0 && (
-        <p style={styles.text}>Belum ada produk.</p>
-      )}
+
+      {/* Footer */}
+      <div className="footer">
+        <div className="container">
+          <div className="brand">HIANKA</div>
+          <p>Premium Limited Drop Marketplace</p>
+          <p style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+            Designed & Developed by Viee Lychn
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    minHeight: '100vh',
-    padding: '20px',
-    background: '#0a0a0a',
-    color: '#fff',
-  },
-  title: {
-    fontSize: '28px',
-    marginBottom: '20px',
-    textAlign: 'center',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-    gap: '20px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-  },
-  card: {
-    background: '#1a1a2e',
-    padding: '16px',
-    borderRadius: '12px',
-    textDecoration: 'none',
-    color: '#fff',
-    border: '1px solid #2a2a2a',
-    transition: 'transform 0.2s',
-  },
-  imagePlaceholder: {
-    height: '150px',
-    background: '#2a2a2a',
-    borderRadius: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '48px',
-    marginBottom: '12px',
-  },
-  productName: {
-    fontSize: '16px',
-    fontWeight: 'bold',
-    marginBottom: '4px',
-  },
-  price: {
-    color: '#c9a227',
-    fontWeight: 'bold',
-    fontSize: '18px',
-  },
-  category: {
-    color: '#888',
-    fontSize: '14px',
-  },
-  stock: {
-    color: '#22c55e',
-    fontSize: '14px',
-  },
-  text: {
-    textAlign: 'center',
-    color: '#888',
-  },
-  error: {
-    color: '#e5484d',
-    textAlign: 'center',
-  },
-};
