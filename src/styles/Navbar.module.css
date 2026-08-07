@@ -1,0 +1,109 @@
+.navbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background 0.3s;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #c9a227, #e5484d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  text-decoration: none;
+}
+
+.themeToggle {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 17px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.link {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s;
+  padding: 4px 0;
+}
+
+.link:hover {
+  color: #c9a227;
+}
+
+.btnLogin {
+  padding: 6px 18px;
+  background: linear-gradient(135deg, #c9a227, #e5484d);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btnLogin:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
+}
+
+/* ===== DESKTOP ===== */
+@media (min-width: 769px) {
+  .container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+  }
+  .topRow { gap: 0; }
+  .bottomRow { gap: 28px; }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .navbar { padding: 6px 0; }
+  .logo { font-size: 20px; }
+  .bottomRow { gap: 16px; }
+  .link { font-size: 13px; }
+  .btnLogin { padding: 5px 14px; font-size: 12px; }
+  .themeToggle { width: 32px; height: 32px; font-size: 15px; }
+}
