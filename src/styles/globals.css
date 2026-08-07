@@ -335,3 +335,77 @@ body {
   color: #fff;
   border-color: #c9a227;
 }
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 18px 0;
+  }
+
+  .container {
+    gap: 16px;
+  }
+
+  .logo {
+    font-size: 2.5rem;
+  }
+
+  .nav-menu {
+    gap: 28px;
+  }
+
+  .login-btn {
+    max-width: 220px;
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 2rem;
+  }
+
+  .nav-menu {
+    gap: 20px;
+  }
+
+  .nav-menu a {
+    font-size: 14px;
+  }
+
+  .login-btn {
+    max-width: 180px;
+    padding: 12px;
+  }
+}
+/* ===== NAVBAR RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .navbar .desktop-menu {
+    display: none !important;
+  }
+
+  .navbar .hamburger {
+    display: flex !important;
+  }
+
+  .navbar .mobile-menu {
+    display: flex !important;
+  }
+
+  .navbar .container {
+    padding: 0 16px;
+  }
+
+  .navbar .logo {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 769px) {
+  .navbar .hamburger {
+    display: none !important;
+  }
+
+  .navbar .mobile-menu {
+    display: none !important;
+  }
+}
