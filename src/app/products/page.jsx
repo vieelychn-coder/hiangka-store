@@ -1,6 +1,5 @@
-import Navbar from '../../components/Navbar';
 import Link from 'next/link';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../lib/supabase';
 
 async function getProducts(category) {
   let query = supabase.from('products').select('*');
@@ -12,10 +11,6 @@ async function getProducts(category) {
   return data;
 }
 
-function getProductImage(id) {
-  return `https://picsum.photos/seed/${id}/300/300`;
-}
-
 export default async function ProductsPage({ searchParams }) {
   const category = searchParams?.category || 'all';
   const products = await getProducts(category);
@@ -23,63 +18,153 @@ export default async function ProductsPage({ searchParams }) {
   const categories = ['all', 'Fashion', 'Accessories', 'Footwear', 'Art & Print', 'Lifestyle'];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      <Navbar />
-      <div className="container" style={{ paddingTop: '24px' }}>
-        {/* Kategori Filter */}
-        <div className="category-grid">
-          {categories.map((cat) => (
-            <Link 
-              key={cat} 
-              href={`/products?category=${cat}`}
-              className={`category-item ${category === cat ? 'active' : ''}`}
-            >
-              {cat === 'all' ? 'Semua' : cat}
-            </Link>
-          ))}
-        </div>
+    <div style={styles.container}>
+      <h1 style={styles.title}>Semua Produk</h1>
 
-        {/* Produk */}
-        <div className="section-title">
-          <span>{category === 'all' ? 'Semua Produk' : category}</span>
-          <span style={{ fontSize: '14px', color: '#888' }}>{products.length} produk</span>
-        </div>
-
-        <div className="product-grid">
-          {products.length === 0 ? (
-            <p style={{ textAlign: 'center', color: '#888', gridColumn: '1 / -1', padding: '40px' }}>
-              Belum ada produk di kategori ini.
-            </p>
-          ) : (
-            products.map((product) => (
-              <Link href={`/detail/${product.id}`} key={product.id} className="product-card">
-                <img 
-                  src={getProductImage(product.id)} 
-                  alt={product.name}
-                  className="product-image"
-                />
-                <div className="info">
-                  <div className="name">{product.name}</div>
-                  <div className="price">Rp {product.price.toLocaleString('id-ID')}</div>
-                  <div className="rating">⭐ {product.rating}</div>
-                  <div className="sold">{product.sold} terjual</div>
-                </div>
-              </Link>
-            ))
-          )}
-        </div>
+      <div style={styles.categoryWrapper}>
+        {categories.map((cat) => (
+          <Link
+            key={cat}
+            href={`/products?category=${cat}`}
+            style={{
+              ...styles.categoryChip,
+              ...(cat === category ? styles.categoryActive : {}),
+            }}
+          >
+            {cat === 'all' ? 'Semua' : cat}
+          </Link>
+        ))}
       </div>
 
-      {/* Footer */}
-      <div className="footer">
-        <div className="container">
-          <div className="brand">HIANKA</div>
-          <p>Premium Limited Drop Marketplace</p>
-          <p style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
-            Designed & Developed by Viee Lychn
-          </p>
-        </div>
+      <div style={styles.productGrid}>
+        {products.length === 0 ? (
+          <p style={styles.empty}>Belum ada produk di kategori ini.</p>
+        ) : (
+          products.map((product) => {
+            const imageUrl = product.images?.[0] || product.image_url || product.thumbnail || '';
+            return (
+              <Link href={`/detail/${product.id}`} key={product.id} style={styles.productCard}>
+                <div style={styles.imageWrapper}>
+                  {imageUrl ? (
+                    <img src={imageUrl} alt={product.name} style={styles.productImage} />
+                  ) : (
+                    <div style={styles.noImage}>No Image</div>
+                  )}
+                </div>
+                <div style={styles.productInfo}>
+                  <div style={styles.productName}>{product.name}</div>
+                  <div style={styles.productPrice}>Rp {product.price.toLocaleString('id-ID')}</div>
+                  <div style={styles.productRating}>★ {product.rating}</div>
+                  <div style={styles.productSold}>{product.sold} sold</div>
+                </div>
+              </Link>
+            );
+          })
+        )}
       </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '24px 16px',
+    minHeight: '100vh',
+    background: '#0a0a0a',
+    color: '#fff',
+  },
+  title: {
+    fontSize: '28px',
+    fontWeight: '700',
+    marginBottom: '20px',
+  },
+  categoryWrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+    marginBottom: '24px',
+    overflowX: 'auto',
+  },
+  categoryChip: {
+    padding: '8px 16px',
+    borderRadius: '20px',
+    border: '1px solid #333',
+    background: 'transparent',
+    color: '#ccc',
+    fontSize: '13px',
+    whiteSpace: 'nowrap',
+    textDecoration: 'none',
+    transition: 'all 0.2s',
+  },
+  categoryActive: {
+    background: '#c9a227',
+    color: '#000',
+    borderColor: '#c9a227',
+  },
+  productGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+    gap: '16px',
+  },
+  productCard: {
+    background: '#1a1a2e',
+    borderRadius: '12px',
+    border: '1px solid #2a2a2a',
+    overflow: 'hidden',
+    textDecoration: 'none',
+    color: 'inherit',
+    transition: 'transform 0.2s',
+  },
+  imageWrapper: {
+    width: '100%',
+    aspectRatio: '1',
+    background: '#111',
+  },
+  productImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  noImage: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#666',
+    fontSize: '14px',
+  },
+  productInfo: {
+    padding: '12px',
+  },
+  productName: {
+    fontSize: '14px',
+    fontWeight: '600',
+    color: '#fff',
+    marginBottom: '2px',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+  },
+  productPrice: {
+    fontSize: '16px',
+    fontWeight: '700',
+    color: '#e5484d',
+  },
+  productRating: {
+    fontSize: '13px',
+    color: '#f59e0b',
+  },
+  productSold: {
+    fontSize: '12px',
+    color: '#888',
+  },
+  empty: {
+    textAlign: 'center',
+    color: '#888',
+    padding: '40px 0',
+  },
+};

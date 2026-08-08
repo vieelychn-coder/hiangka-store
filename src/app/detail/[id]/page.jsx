@@ -3,9 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { supabase } from '../../../lib/supabase';
-import Navbar from '../../../components/Navbar';
 
 function getProductImage(id) {
   return `https://picsum.photos/seed/${id}/600/600`;
@@ -38,14 +36,8 @@ export default function DetailPage() {
     };
     if (params.id) fetchProduct();
 
-    // Ambil user ID dari session
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        setUserId(data.session.user.id);
-        console.log('User ID:', data.session.user.id);
-      } else {
-        console.log('User not logged in');
-      }
+      if (data.session) setUserId(data.session.user.id);
     });
   }, [params.id]);
 
@@ -56,7 +48,6 @@ export default function DetailPage() {
     }
     setAdding(true);
     try {
-      // Cek apakah produk sudah ada di cart
       const { data: existing } = await supabase
         .from('cart')
         .select('*')
@@ -65,14 +56,12 @@ export default function DetailPage() {
         .single();
 
       if (existing) {
-        // Update quantity
         const { error } = await supabase
           .from('cart')
           .update({ quantity: existing.quantity + quantity })
           .eq('id', existing.id);
         if (error) throw error;
       } else {
-        // Insert baru
         const { error } = await supabase
           .from('cart')
           .insert([{ user_id: userId, product_id: product.id, quantity }]);
@@ -80,8 +69,7 @@ export default function DetailPage() {
       }
       alert('Berhasil ditambahkan ke keranjang!');
     } catch (err) {
-      console.error('Error adding to cart:', err);
-      alert('Gagal menambahkan ke keranjang: ' + err.message);
+      alert('Gagal menambahkan ke keranjang');
     } finally {
       setAdding(false);
     }
@@ -89,88 +77,49 @@ export default function DetailPage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-        <Navbar />
-        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text)' }}>Loading...</div>
+      <div style={styles.container}>
+        <p style={styles.text}>Loading...</p>
       </div>
     );
   }
 
   if (error || !product) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-        <Navbar />
-        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text)' }}>
-          <p style={{ color: '#e5484d' }}>{error || 'Produk tidak ditemukan'}</p>
-          <Link href="/products" style={{ color: '#c9a227', textDecoration: 'none' }}>← Kembali ke Produk</Link>
-        </div>
+      <div style={styles.container}>
+        <p style={styles.error}>{error || 'Produk tidak ditemukan'}</p>
+        <Link href="/products" style={styles.backButton}>← Kembali ke Produk</Link>
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-      <Navbar />
-      <div style={styles.container}>
-        <Link href="/products" style={styles.backButton}>← Kembali</Link>
-        
-        <div style={styles.card}>
-          {/* Gambar */}
-          <div style={styles.imageWrapper}>
-            <Image 
-              src={getProductImage(product.id)} 
-              alt={product.name}
-              fill
-              style={{ objectFit: 'cover' }}
-              priority
-            />
-          </div>
-
-          {/* Info Produk */}
-          <div style={styles.info}>
-            <h1 style={styles.name}>{product.name}</h1>
-            <p style={styles.code}>{product.code}</p>
-            <p style={styles.price}>Rp {product.price.toLocaleString('id-ID')}</p>
-            
-            <div style={styles.meta}>
-              <span style={styles.category}>Kategori: {product.category}</span>
-              <span style={styles.stock}>Stok: {product.stock}</span>
-              <span style={styles.rating}>★ {product.rating} ({product.sold} terjual)</span>
-            </div>
-
-            <p style={styles.description}>{product.description}</p>
-
-            {/* Quantity & Add to Cart */}
-            <div style={styles.action}>
-              <div style={styles.quantity}>
-                <button 
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))} 
-                  style={styles.qtyBtn}
-                >
-                  −
-                </button>
-                <span style={styles.qtyText}>{quantity}</span>
-                <button 
-                  onClick={() => setQuantity(quantity + 1)} 
-                  style={styles.qtyBtn}
-                >
-                  +
-                </button>
-              </div>
-              <button 
-                onClick={handleAddToCart} 
-                style={{
-                  ...styles.addBtn,
-                  opacity: adding ? 0.7 : 1,
-                  cursor: adding ? 'default' : 'pointer',
-                }}
-                disabled={adding}
-              >
-                {adding ? 'Menambahkan...' : 'Tambah ke Keranjang'}
-              </button>
-            </div>
-          </div>
+    <div style={styles.container}>
+      <Link href="/products" style={styles.backButton}>← Kembali</Link>
+      <div style={styles.card}>
+        <img
+          src={getProductImage(product.id)}
+          alt={product.name}
+          style={styles.detailImage}
+        />
+        <h1 style={styles.name}>{product.name}</h1>
+        <p style={styles.code}>{product.code}</p>
+        <p style={styles.price}>Rp {product.price.toLocaleString('id-ID')}</p>
+        <p style={styles.category}>Kategori: {product.category}</p>
+        <p style={styles.stock}>Stok: {product.stock}</p>
+        <p style={styles.rating}>★ {product.rating} ({product.sold} terjual)</p>
+        <p style={styles.description}>{product.description}</p>
+        <div style={styles.quantityControl}>
+          <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={styles.qtyBtn}>−</button>
+          <span style={styles.qtyText}>{quantity}</span>
+          <button onClick={() => setQuantity(quantity + 1)} style={styles.qtyBtn}>+</button>
         </div>
+        <button
+          onClick={handleAddToCart}
+          style={styles.addBtn}
+          disabled={adding}
+        >
+          {adding ? 'Menambahkan...' : 'Tambah ke Keranjang'}
+        </button>
       </div>
     </div>
   );
@@ -178,9 +127,12 @@ export default function DetailPage() {
 
 const styles = {
   container: {
-    maxWidth: '1000px',
+    maxWidth: '800px',
     margin: '0 auto',
     padding: '24px 16px',
+    minHeight: '100vh',
+    background: '#0a0a0a',
+    color: '#fff',
   },
   backButton: {
     display: 'inline-block',
@@ -188,111 +140,84 @@ const styles = {
     textDecoration: 'none',
     marginBottom: '20px',
     fontSize: '15px',
-    fontWeight: '500',
   },
   card: {
-    background: 'var(--card)',
+    background: '#1a1a2e',
+    padding: '24px',
     borderRadius: '16px',
-    border: '1px solid var(--border)',
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '0',
+    border: '1px solid #2a2a2a',
   },
-  imageWrapper: {
-    position: 'relative',
-    width: '50%',
-    aspectRatio: '1',
-    background: 'var(--bg)',
-    flexShrink: 0,
-  },
-  info: {
-    padding: '32px',
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
+  detailImage: {
+    width: '100%',
+    height: '300px',
+    objectFit: 'cover',
+    borderRadius: '12px',
+    marginBottom: '16px',
+    background: '#111',
   },
   name: {
-    fontSize: '28px',
+    fontSize: '24px',
     fontWeight: '700',
-    color: 'var(--text)',
-    margin: 0,
+    marginBottom: '4px',
   },
   code: {
-    fontSize: '14px',
     color: '#888',
-    margin: 0,
+    fontSize: '14px',
+    marginBottom: '12px',
   },
   price: {
-    fontSize: '32px',
+    fontSize: '28px',
     fontWeight: '800',
     color: '#e5484d',
-    margin: 0,
-  },
-  meta: {
-    display: 'flex',
-    gap: '16px',
-    flexWrap: 'wrap',
-    fontSize: '14px',
-    color: 'var(--text)',
-    marginTop: '4px',
+    marginBottom: '12px',
   },
   category: {
     color: '#888',
+    fontSize: '15px',
+    marginBottom: '6px',
   },
   stock: {
     color: '#22c55e',
+    fontSize: '15px',
+    marginBottom: '6px',
   },
   rating: {
     color: '#f59e0b',
+    fontSize: '15px',
+    marginBottom: '12px',
   },
   description: {
+    color: '#aaa',
     fontSize: '15px',
     lineHeight: '1.7',
-    color: 'var(--text)',
-    opacity: 0.8,
-    marginTop: '4px',
+    marginTop: '8px',
   },
-  action: {
+  quantityControl: {
     display: 'flex',
     alignItems: 'center',
-    gap: '20px',
+    gap: '16px',
     marginTop: '16px',
-    flexWrap: 'wrap',
-  },
-  quantity: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    background: 'var(--bg)',
-    borderRadius: '12px',
-    padding: '4px',
+    justifyContent: 'center',
   },
   qtyBtn: {
     width: '40px',
     height: '40px',
-    border: 'none',
     borderRadius: '8px',
+    border: '1px solid #333',
     background: 'transparent',
-    color: 'var(--text)',
+    color: '#fff',
     fontSize: '22px',
-    fontWeight: '600',
     cursor: 'pointer',
-    transition: 'background 0.2s',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   qtyText: {
-    fontSize: '18px',
+    fontSize: '20px',
     fontWeight: '600',
-    color: 'var(--text)',
-    minWidth: '32px',
+    minWidth: '40px',
     textAlign: 'center',
   },
   addBtn: {
-    padding: '14px 40px',
+    padding: '14px 24px',
+    width: '100%',
     background: 'linear-gradient(135deg, #c9a227, #e5484d)',
     color: '#fff',
     border: 'none',
@@ -300,8 +225,14 @@ const styles = {
     fontSize: '16px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'all 0.3s',
-    flex: 1,
-    minWidth: '200px',
+    marginTop: '16px',
+  },
+  text: {
+    textAlign: 'center',
+    color: '#888',
+  },
+  error: {
+    color: '#e5484d',
+    textAlign: 'center',
   },
 };
