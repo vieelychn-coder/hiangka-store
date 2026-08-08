@@ -2,9 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { supabase } from '../../lib/supabase';
-import Navbar from '../../components/Navbar';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -22,6 +20,11 @@ export default function RegisterPage() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          name: name,
+        },
+      },
     });
 
     if (error) {
@@ -34,93 +37,84 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={styles.page}>
-      <Navbar />
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <h1 style={styles.title}>Daftar</h1>
-          <p style={styles.subtitle}>Gabung komunitas HIANKA</p>
-          {error && <p style={styles.error}>{error}</p>}
-          <form onSubmit={handleRegister} style={styles.form}>
-            <input
-              type="text"
-              placeholder="Nama Lengkap"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              style={styles.input}
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={styles.input}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Password (min 6 karakter)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={styles.input}
-              required
-              minLength="6"
-            />
-            <button type="submit" style={styles.button} disabled={loading}>
-              {loading ? 'Loading...' : 'Daftar'}
-            </button>
-          </form>
-          <p style={styles.link}>
-            Sudah punya akun? <Link href="/login">Masuk</Link>
-          </p>
-        </div>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h1 style={styles.title}>Daftar</h1>
+        <p style={styles.subtitle}>Gabung komunitas HIANKA</p>
+        {error && <p style={styles.error}>{error}</p>}
+        <form onSubmit={handleRegister} style={styles.form}>
+          <input
+            type="text"
+            placeholder="Nama Lengkap"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={styles.input}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={styles.input}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={styles.input}
+            required
+          />
+          <button type="submit" style={styles.button} disabled={loading}>
+            {loading ? 'Loading...' : 'Daftar'}
+          </button>
+        </form>
+        <p style={styles.link}>
+          Sudah punya akun? <a href="/login">Login</a>
+        </p>
       </div>
     </div>
   );
 }
 
 const styles = {
-  page: {
-    minHeight: '100vh',
-    background: 'var(--bg)',
-  },
   container: {
+    minHeight: '100vh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '40px 20px',
+    background: '#0a0a0a',
+    padding: '20px',
   },
   card: {
-    background: 'var(--card)',
+    background: '#1a1a2e',
     padding: '40px',
     borderRadius: '16px',
-    maxWidth: '420px',
+    maxWidth: '400px',
     width: '100%',
-    border: '1px solid var(--border)',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+    border: '1px solid #2a2a2a',
   },
   title: {
-    color: 'var(--text)',
+    color: '#fff',
     fontSize: '28px',
     fontWeight: '700',
-    marginBottom: '4px',
+    marginBottom: '8px',
     textAlign: 'center',
   },
   subtitle: {
     color: '#888',
     textAlign: 'center',
     marginBottom: '24px',
-    fontSize: '14px',
   },
   error: {
     color: '#e5484d',
-    background: '#fde8e8',
+    background: '#1a0a0a',
     padding: '10px',
     borderRadius: '8px',
     marginBottom: '16px',
     fontSize: '14px',
-    textAlign: 'center',
   },
   form: {
     display: 'flex',
@@ -129,13 +123,12 @@ const styles = {
   },
   input: {
     padding: '12px 16px',
-    background: 'var(--bg)',
-    border: '1px solid var(--border)',
+    background: '#0a0a0a',
+    border: '1px solid #2a2a2a',
     borderRadius: '8px',
-    color: 'var(--text)',
+    color: '#fff',
     fontSize: '16px',
     outline: 'none',
-    transition: 'border-color 0.3s',
   },
   button: {
     padding: '12px',
@@ -147,7 +140,6 @@ const styles = {
     fontWeight: '600',
     cursor: 'pointer',
     marginTop: '8px',
-    transition: 'transform 0.2s',
   },
   link: {
     color: '#888',

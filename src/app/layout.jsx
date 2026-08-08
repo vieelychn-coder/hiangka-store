@@ -1,5 +1,6 @@
+import { AuthProvider } from '../context/AuthContext';
+import Navbar from '../components/Navbar';
 import '../styles/globals.css';
-import { ThemeProvider } from '../context/ThemeContext';
 
 export const metadata = {
   title: 'HIANKA Store - Premium Limited Drop Marketplace',
@@ -10,9 +11,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <AuthProvider>
+          <Navbar />
+          <main style={{ minHeight: 'calc(100vh - 70px)' }}>
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );
